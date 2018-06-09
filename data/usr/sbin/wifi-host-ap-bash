@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Created by Stanislav German-Evtushenko, 2011 (http://habrahabr.ru/post/122876/)
+# Updated by Stanislav German-Evtushenko, 2014
+
+if [ $USER == root -a $# == 2 ]
+then
+    LAN=$1
+    WIFI=$2
+else
+    echo -e "Usage:\tsudo $0 LAN_interface WIFI_interface, for example:\n\tsudo $0 eth0 wlan0"
+    exit 0
+fi
+
+configfile="$HOME/.config/wifi-host-ap.conf"
+
+if [ -f "$configfile" ]
+then
+    source "$configfile"
+
+cat > $DNSMASQ_CONF << EOF
+bind-interfaces
+except-interface=lo
+interface=$WIFI
+dhcp-range=$DHCP_RANGE
+EOF
+
+cat > $HOSTAPD_CONF << EOF
+interface=$WIFI
+driver=$WIFIdriver
+ssid=$WIFIssid
+hw_mode=$WIFImode
+channel=$WIFIchannel
+wpa=$WIFIwpa
+wpa_passphrase=$WIFIpass
+EOF
+
+    # Start
+    rfkill unblock wifi
+    ifconfig $WIFI $HOST_IP
+    dnsmasq --conf-file=$DNSMASQ_CONF --pid-file=$DNSMASQ_PID
+    sysctl net.ipv4.ip_forward=1
+    iptables -t nat -A POSTROUTING -o $LAN -j MASQUERADE
+    hostapd $HOSTAPD_CONF
+
+    iptables -D POSTROUTING -t nat -o $LAN -j MASQUERADE
+    sysctl net.ipv4.ip_forward=0
+    kill $(cat $DNSMASQ_PID)
+    rm $DNSMASQ_PID
+
+    # Cleanup
+    rm $DNSMASQ_CONF
+    rm $HOSTAPD_CONF
+
+else
+    echo "Not found $configfile!"
+    echo "See /usr/share/doc/wifi-host-ap-bash/wifi-host-ap.conf.sample"
+fi

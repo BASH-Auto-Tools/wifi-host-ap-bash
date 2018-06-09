@@ -1,0 +1,32 @@
+HelpLinux [https://github.com/giner/helplinux]
+Author: Stanislav German-Evtushenko <giner@github.com>
+
+These small scripts are intended to help make your laptop to work as a Wi-Fi Access Point in one "click".
+
+Prerequisites:
+- Wi-Fi card/adapter supported by hostapd
+- Internet connection
+
+How to use:
+1. Install required packages:
+    sudo apt-get install rfkill hostapd dnsmasq-base screen
+    sudo service hostapd stop
+    sudo update-rc.d hostapd disable
+2. Disable Wi-Fi in "Network Manager" if you are using one.
+ You can do this using the network icon in the tray or
+ do this permanently in the following configuration file
+ /etc/NetworkManager/NetworkManager.conf:
+
+[keyfile]
+unmanaged-devices=mac:<hwaddr>
+
+3. Copy and modify configfile:
+    sudo cp -v /usr/share/doc/wifi-host-ap.conf.sample /root/.config/wifi-host-ap.conf
+    sudo nano /root/.config/wifi-host-ap.conf
+
+4. Run wifi-host-ap-start.sh LAN_interface WIFI_interface, for example:
+    sudo screen wifi-host-ap-bash eth0 wlan0
+
+Defaults:
+- Access Point name: laptop-wifi
+- WPA2 password: wifipass

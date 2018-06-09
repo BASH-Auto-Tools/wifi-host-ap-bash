@@ -1,0 +1,16 @@
+Package: wifi-host-ap-bash
+Version: 0.20151205-wheezy
+Architecture: all
+Maintainer: Stanislav German-Evtushenko <giner@github.com>
+Section: admin
+Priority: extra
+Depends: bash, sudo, rfkill, hostapd, dnsmasq-base, screen
+Installed-Size: 20
+Provides: helplinux
+Homepage: https://github.com/giner/helplinux
+Description:  Wi-Fi Access Point in one click
+ These small scripts are intended to help make your laptop
+ to work as a Wi-Fi Access Point in one "click".
+ Prerequisites:
+ - Wi-Fi card/adapter supported by hostapd
+ - Internet connection

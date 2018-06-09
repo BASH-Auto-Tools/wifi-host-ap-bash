@@ -1,0 +1,19 @@
+HOST_IP=192.168.153.1
+DHCP_RANGE=192.168.153.2,192.168.153.15
+# Set pid file, recommended '/root/tmp/dnsmasq.pid', need a folder /root/tmp
+DNSMASQ_PID=/tmp/dnsmasq.pid
+# Set temp file, recommended '/root/tmp/...', need a folder /root/tmp
+DNSMASQ_CONF=$(mktemp /tmp/dnsmasq.conf-XXXXXXXXXX)
+HOSTAPD_CONF=$(mktemp /tmp/hostapd.conf-XXXXXXXXXX)
+# Select driver
+WIFIdriver=nl80211
+# Set access point name
+WIFIssid=laptop-wifi
+# Set access point harware mode to 802.11g
+WIFImode=g
+# Set WIFI channel (can be changed)
+WIFIchannel=6
+# Enable WPA2 only (1 for WPA, 2 for WPA2, 3 for WPA + WPA2)
+WIFIwpa=2
+# Set WIFI password
+WIFIpass=wifipass
